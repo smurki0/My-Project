@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إتمام الطلب | أسطآر</title>
+
+<!-- خط Cairo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-color: #0a0a0a;
+  --card-bg: #141414;
+  --input-bg: #1a1a1a;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --accent-color: #d4af37;
+  --font-main: 'Cairo', sans-serif;
+  --transition: all 0.3s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-main); background-color: var(--bg-color); color: var(--text-primary); line-height: 1.6; font-weight: 300; min-height: 100vh; }
+a { text-decoration: none; color: inherit; transition: var(--transition); }
+ul { list-style: none; }
+
+/* Header */
+header { position: fixed; top: 0; width: 100%; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(10,10,10,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); height: 80px; }
+.logo { display: flex; align-items: center; font-size: 1.5rem; font-weight: 700; }
+.logo-img { height: 40px; margin-left: 10px; }
+.logo span { color: var(--accent-color); font-weight: 300; }
+nav ul { display: flex; gap: 2rem; }
+nav a { font-weight: 300; }
+nav a:hover, nav a.active { color: var(--accent-color); }
+
+/* Checkout Page Layout */
+.checkout-page { padding: 120px 5% 60px 5%; max-width: 1400px; margin: 0 auto; }
+.page-header { margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; }
+.page-title { font-size: 2rem; font-weight: 400; }
+.checkout-layout { display: grid; grid-template-columns: 2fr 1.2fr; gap: 3rem; }
+
+/* Form Section */
+.form-section { background-color: transparent; }
+.section-title { font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--text-primary); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+.input-group { display: flex; flex-direction: column; gap: 8px; }
+.input-group.full { grid-column: span 2; }
+label { font-size: 0.9rem; color: var(--text-secondary); }
+input, select, textarea {
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 15px;
+  border-radius: 8px;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  transition: var(--transition);
+  outline: none;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px rgba(212,175,55,0.1); }
+
+/* Payment Methods */
+.payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.payment-option { position: relative; cursor: pointer; }
+.payment-option input { position: absolute; opacity: 0; cursor: pointer; }
+.payment-card { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px; transition: var(--transition); }
+.payment-option input:checked + .payment-card { border-color: var(--accent-color); background-color: rgba(212,175,55,0.05); }
+
+/* Order Summary */
+.order-summary-card { background-color: var(--card-bg); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); height: fit-content; position: sticky; top: 100px; }
+.summary-title { font-size: 1.4rem; margin-bottom: 1rem; }
+.product-item-mini { display: flex; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border-color); }
+.mini-img { width: 60px; height: 70px; object-fit: cover; border-radius: 6px; }
+.mini-info h4 { font-size: 0.95rem; font-weight: 400; }
+.mini-info p { font-size: 0.85rem; color: var(--text-secondary); }
+.mini-price { font-size: 0.95rem; color: var(--accent-color); font-weight: 500; }
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 0.8rem; color: var(--text-secondary); font-size: 0.95rem; }
+.summary-total { display: flex; justify-content: space-between; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 1.3rem; color: var(--text-primary); font-weight: 600; }
+.total-price { color: var(--accent-color); }
+
+.place-order-btn { width: 100%; padding: 18px; background-color: var(--accent-color); color: #000; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 700; margin-top: 2rem; cursor: pointer; transition: var(--transition); display: flex; justify-content: center; align-items: center; gap: 10px; }
+.place-order-btn:hover { background-color: #fff; transform: translateY(-2px); }
+.place-order-btn:disabled { background-color: #555; cursor: not-allowed; transform: none; }
+
+/* Success Overlay */
+.success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+.success-box { background: var(--card-bg); padding: 3rem; border-radius: 16px; text-align: center; border: 1px solid var(--accent-color); max-width: 400px; animation: popUp 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
+.check-icon { width: 80px; height: 80px; background: var(--accent-color); color: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 3rem; margin: 0 auto 1.5rem auto; }
+@keyframes popUp { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* Responsive */
+@media (max-width:900px){
+  .checkout-layout{grid-template-columns:1fr;}
+  .order-summary-card{position:static;}
+  .form-grid{grid-template-columns:1fr;}
+  .input-group.full{grid-column:span 1;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+      <img src="https://cdn-icons-png.flaticon.com/512/1000/1000681.png" alt="Logo" class="logo-img">
+      <div>أسطآر <span>.ستايل</span></div>
+  </a>
+  <nav>
+      <ul>
+          <li><a href="index.html">الرئيسية</a></li>
+          <li><a href="products.html">المنتجات</a></li>
+          <li><a href="cart.html">السلة</a></li>
+          <li><a href="checkout.html" class="active">الدفع</a></li>
+      </ul>
+  </nav>
+</header>
+
+<main class="checkout-page">
+  <div class="page-header">
+      <h1 class="page-title">إتمام الطلب</h1>
+      <a href="cart.html" style="color: var(--text-secondary); font-size:0.9rem;">&larr; العودة للسلة</a>
+  </div>
+
+  <div class="checkout-layout">
+    <!-- Form -->
+    <div class="form-section">
+      <form id="checkout-form">
+        <h3 class="section-title">معلومات الشحن</h3>
+        <div class="form-grid">
+          <div class="input-group">
+            <label>الاسم الكامل</label>
+            <input type="text" placeholder="أدخل اسمك الكامل" required>
+          </div>
+          <div class="input-group">
+            <label>رقم الهاتف</label>
+            <input type="tel" placeholder="01xxxxxxxx" required>
+          </div>
+          <div class="input-group">
+            <label>المدينة</label>
+            <select id="city" required>
+                <option value="" disabled selected>اختر المدينة</option>
+                <option value="الإسكندرية">الإسكندرية</option>
+                <option value="القاهرة">القاهرة</option>
+                <option value="دمنهور">دمنهور</option>
+                <option value="كفر الشيخ">كفر الشيخ</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>المنطقة</label>
+            <input type="text" id="area" placeholder="اسم الحي">
+          </div>
+          <div class="input-group full">
+            <label>العنوان بالتفصيل</label>
+            <textarea rows="3" placeholder="الشارع، رقم المبنى، رقم الشقة..." required></textarea>
+          </div>
+        </div>
+
+        <h3 class="section-title">طريقة الدفع</h3>
+        <div class="payment-methods">
+          <label class="payment-option">
+            <input type="radio" name="payment" value="cod" checked>
+            <div class="payment-card">
+              <span>الدفع عند الاستلام</span>
+            </div>
+          </label>
+        </div>
+      </form>
+    </div>
+
+    <!-- Order Summary -->
+    <aside class="order-summary-card">
+      <h3 class="summary-title">ملخص الطلب</h3>
+      <div class="product-items-container"></div>
+
+      <div class="summary-row"><span>المجموع الفرعي</span><span>0 EGP</span></div>
+      <div class="summary-row"><span>الشحن</span><span>مجاني</span></div>
+      <div class="summary-row"><span>الضريبة (5%)</span><span>0 EGP</span></div>
+      <div class="summary-total"><span>الإجمالي</span><span class="total-price">0 EGP</span></div>
+
+      <button type="button" class="place-order-btn" id="payBtn" onclick="processOrder()">
+        <span>تأكيد الطلب</span>
+      </button>
+    </aside>
+  </div>
+</main>
+
+<div class="success-overlay" id="successOverlay">
+  <div class="success-box">
+      <div class="check-icon">✓</div>
+      <h2>شكراً لك!</h2>
+      <p style="color: var(--text-secondary); margin:10px 0 20px 0;">تم استلام طلبك بنجاح وسيتم التواصل معك قريباً.</p>
+      <button onclick="goHome()" style="padding:10px 30px; background:var(--accent-color); border:none; border-radius:6px; cursor:pointer; font-weight:600;">العودة للرئيسية</button>
+  </div>
+</div>
+
+<script>
+function loadCart(){ return JSON.parse(localStorage.getItem("cart")) || []; }
+
+// ================= تحميل الملخص =================
+window.onload = function(){
+  const cart = loadCart();
+  renderItems(cart);
+  updateTotals(cart);
+}
+
+function renderItems(cart){
+  const box = document.querySelector(".product-items-container");
+  box.innerHTML="";
+  cart.forEach(p=>{
+    box.innerHTML+=`
+      <div class="product-item-mini">
+        <img src="${p.image}" class="mini-img">
+        <div>
+          <h4>${p.name}</h4>
+          <p>الكمية: ${p.quantity}</p>
+        </div>
+        <span>${p.price * p.quantity} ج.م</span>
+      </div>
+    `;
+  });
+}
+
+function updateTotals(cart){
+  const subtotal = cart.reduce((sum, item) => {
+    return sum + (item.price * item.quantity);
+  }, 0);
+
+  const tax = subtotal * 0.05;
+  const total = subtotal + tax;
+
+  const rows = document.querySelectorAll(".summary-row");
+  rows[0].children[1].innerText = subtotal.toFixed(2) + " ج.م";
+  rows[2].children[1].innerText = tax.toFixed(2) + " ج.م";
+
+  document.querySelector(".total-price").innerText =
+    total.toFixed(2) + " ج.م";
+}
+
+
+// ================= إرسال الطلب =================
+function processOrder(){
+
+  const name = document.querySelector('input[type="text"]').value;
+  const phone = document.querySelector('input[type="tel"]').value;
+  const address = document.querySelector('textarea').value;
+  const city = document.getElementById('city').value;
+  const area = document.getElementById('area').value;   // ← الجديد
+
+  if(!name || !phone || !address || !city || !area){
+    alert("اكمل البيانات");
+    return;
+  }
+
+  const cart = loadCart();
+
+  fetch("http://localhost:3000/api/orders",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      customerName:name,
+      phone:phone,
+      address:address,
+      city:city,
+      area:area,   // ← الجديد
+      items:cart,
+      total: cart.reduce((s,i)=>s+(i.price*i.quantity),0)
+    })
+  })
+  .then(res=>res.text())
+  .then(()=>{
+    alert("تم إرسال الطلب بنجاح ✔");
+    localStorage.removeItem("cart");
+    window.location.href="index.html";
+  });
+}
+
+function goHome(){ window.location.href="index.html"; }
+</script>
+
+</body>
+</html>
+

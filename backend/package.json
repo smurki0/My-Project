@@ -1,0 +1,27 @@
+{
+  "name": "asstar-backend",
+  "version": "1.0.0",
+  "description": "Minimal Express backend for Asstar storefront",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "body-parser": "^2.2.2",
+    "cloudinary": "^1.41.3",
+    "cors": "^2.8.6",
+    "express": "^4.22.1",
+    "firebase-admin": "^13.6.1",
+    "mongodb": "^7.1.0",
+    "mongoose": "^9.2.0",
+    "multer": "^1.4.5-lts.1",
+    "multer-storage-cloudinary": "^4.0.0",
+    "sqlite3": "^5.1.7"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
