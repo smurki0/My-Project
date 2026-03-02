@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 // ================== DATABASE ==================
-const db = new sqlite3.Database("./store.db");
+const db = new sqlite3.Database("/app/store.db");
 
 // PRODUCTS TABLE
 db.run(`
@@ -132,7 +132,7 @@ app.use("/Asstar", express.static("Asstar"));
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log("Server running on port " + PORT);
+    console.log("Server running on port", PORT);
 });
 
 
