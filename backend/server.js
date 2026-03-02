@@ -129,7 +129,9 @@ app.delete("/api/orders/:id", (req, res) => {
 // ================== RUN ==================
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT);
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
+});
 
 app.use("/Asstar", express.static("Asstar"));
 
